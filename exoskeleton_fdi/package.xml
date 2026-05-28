@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>exoskeleton_fdi</name>
+  <version>0.0.0</version>
+  <description>
+    Standalone Fault Detection and Isolation node for the exoskeleton digital twin.
+    Detects sensor faults on channel 0 (tau_ext_theta / load cell) and
+    channel 3 (joint_states / encoder) using dedicated residual generators
+    with thresholding and debounce. Independent from the safety chain.
+  </description>
+  <maintainer email="mbari@todo.todo">mbari</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>exoskeleton_safety_msgs</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

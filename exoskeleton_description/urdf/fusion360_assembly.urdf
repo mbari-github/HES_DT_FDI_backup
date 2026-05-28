@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="urdf_assembly">
+    <link name="old_component">
+        <inertial>
+            <origin xyz="-2.5399269266485207e-09 -0.03597167695154545 -0.008233009121541629" rpy="0.0 0.0 0.0" />
+            <mass value="0.12233246834366321" />
+            <inertia ixx="5.91121041839972e-05" iyy="7.750828108867202e-06" izz="5.567957748298086e-05" ixy="-8.990962535521762e-12" iyz="-1.2869432253229753e-06" ixz="-1.4374371681515722e-12" />
+        </inertial>
+        <visual name="old_component_visual">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/old_component.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="old_component_collision">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/old_component.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="link_AC">
+        <inertial>
+            <origin xyz="0.022166962815236575 -0.008171636297232934 3.7936379084500706e-05" rpy="0.0 -0.0 0.0" />
+            <mass value="0.06233674803614039" />
+            <inertia ixx="1.1527400206895323e-05" iyy="9.5782462925507e-06" izz="2.0159460164106572e-05" ixy="6.549945179780449e-06" iyz="7.120180680489637e-08" ixz="-4.922623236438626e-08" />
+        </inertial>
+        <visual name="link_AC_visual">
+            <origin xyz="0.007355981095609813 0.008556327569764736 4.728931281182339e-18" rpy="-2.9131354064673705 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/link_AC.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="link_AC_collision">
+            <origin xyz="0.007355981095609813 0.008556327569764736 4.728931281182339e-18" rpy="-2.9131354064673705 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/link_AC.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="rear_crank">
+        <inertial>
+            <origin xyz="0.013610017031552752 0.007048952012217314 -0.0007619963239419601" rpy="0.0 -0.0 0.0" />
+            <mass value="0.029080817353374918" />
+            <inertia ixx="1.702922659755447e-06" iyy="3.9833861818123796e-06" izz="4.764080684868221e-06" ixy="-1.795601672212753e-06" iyz="-1.1374396501467548e-07" ixz="-2.0399752702489435e-07" />
+        </inertial>
+        <visual name="rear_crank_visual">
+            <origin xyz="0.017099937752482756 -0.05880220443162625 1.979823428255084e-18" rpy="-2.879793265790644 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/rear_crank.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="rear_crank_collision">
+            <origin xyz="0.017099937752482756 -0.05880220443162625 1.979823428255084e-18" rpy="-2.879793265790644 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/rear_crank.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="connecting_rod">
+        <inertial>
+            <origin xyz="-0.006792688126753848 -0.03467041419235408 7.995880318622058e-18" rpy="1.069105884036878e-50 -0.0 0.0" />
+            <mass value="0.038441732824693216" />
+            <inertia ixx="1.557673624488411e-05" iyy="1.2134707888665742e-06" izz="1.6630033146980977e-05" ixy="-2.901874242929412e-06" iyz="-2.274324704844805e-22" ixz="-1.9446263896690293e-22" />
+        </inertial>
+        <visual name="connecting_rod_visual">
+            <origin xyz="-0.030865568806825706 -0.06882186054221709 4.40664924339972e-18" rpy="-3.131992035786903 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/connecting_rod.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="connecting_rod_collision">
+            <origin xyz="-0.030865568806825706 -0.06882186054221709 4.40664924339972e-18" rpy="-3.131992035786903 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/connecting_rod.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="slider_f">
+        <inertial>
+            <origin xyz="0.0002343057138034932 0.006014200956075722 0.0034800039140319206" rpy="0.0 -0.0 0.0" />
+            <mass value="0.006394151650288727" />
+            <inertia ixx="5.4236509669526635e-08" iyy="1.5073905021631605e-07" izz="1.6355068686607177e-07" ixy="-4.480379211214571e-19" iyz="5.89549489667774e-18" ixz="-1.1500914450510773e-19" />
+        </inertial>
+        <visual name="slider_f_visual">
+            <origin xyz="-0.0075 -0.02149784184202119 -0.005257378449617771" rpy="-2.8946632834599613 -4.3767037897639715e-17 -4.622231866529366e-33" />
+            <geometry>
+                <mesh filename="meshes/slider_f.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="slider_f_collision">
+            <origin xyz="-0.0075 -0.02149784184202119 -0.005257378449617771" rpy="-2.8946632834599613 -4.3767037897639715e-17 -4.622231866529366e-33" />
+            <geometry>
+                <mesh filename="meshes/slider_f.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="link_CE">
+        <inertial>
+            <origin xyz="-0.024856005612199215 -0.017224855988709563 0.0006045565885750971" rpy="-2.1382117680737563e-50 -0.0 0.0" />
+            <mass value="0.006356014316138657" />
+            <inertia ixx="5.598742618221023e-07" iyy="2.1100382286632805e-06" izz="2.621935382457712e-06" ixy="-9.946378392283824e-07" iyz="-1.8527264674527563e-08" ixz="-2.993471831249954e-08" />
+        </inertial>
+        <visual name="link_CE_visual">
+            <origin xyz="-0.03204363630798709 0.04956193424933386 -0.000999999999999997" rpy="-2.990752578502034 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/link_CE.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="link_CE_collision">
+            <origin xyz="-0.03204363630798709 0.04956193424933386 -0.000999999999999997" rpy="-2.990752578502034 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/link_CE.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="link_BC">
+        <inertial>
+            <origin xyz="0.027213248837561314 0.039237102798175626 9.992007221626408e-18" rpy="0.0 -0.0 0.0" />
+            <mass value="0.011551620940434573" />
+            <inertia ixx="1.109764786271959e-05" iyy="1.5368942731765915e-06" izz="1.2626841055269077e-05" ixy="-2.9925073603904243e-06" iyz="4.182225177068108e-21" ixz="8.470329472543003e-22" />
+        </inertial>
+        <visual name="link_BC_visual">
+            <origin xyz="0.004364979777251013 0.032409808337532695 0.001000000000000013" rpy="0.08987853240708432 1.5707963267948963 0" />
+            <geometry>
+                <mesh filename="meshes/link_BC.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="link_BC_collision">
+            <origin xyz="0.004364979777251013 0.032409808337532695 0.001000000000000013" rpy="0.08987853240708432 1.5707963267948963 0" />
+            <geometry>
+                <mesh filename="meshes/link_BC.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="slider_t_2-v3">
+        <inertial>
+            <origin xyz="-1.8957135528019363e-09 -2.6086133253500066e-10 4.996003610813204e-18" rpy="0.0 -0.0 0.0" />
+            <mass value="0.0011037664611646789" />
+            <inertia ixx="6.889810619218334e-09" iyy="4.948868812521463e-09" izz="8.895302201965833e-09" ixy="-2.6431527203549637e-10" iyz="-1.0587911840678757e-22" ixz="1.3234889800848446e-23" />
+        </inertial>
+        <visual name="slider_t_2-v3_visual">
+            <origin xyz="0.021359248772730623 0.079486177315825 0.0020000000000000057" rpy="-2.990752578502034 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/slider_t_2-v3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="slider_t_2-v3_collision">
+            <origin xyz="0.021359248772730623 0.079486177315825 0.0020000000000000057" rpy="-2.990752578502034 -1.5707963267948966 0" />
+            <geometry>
+                <mesh filename="meshes/slider_t_2-v3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="thimble-v3">
+        <inertial>
+            <origin xyz="-0.003000000000024911 -0.000271157967306479 0.001303813659732693" rpy="0.0 -0.0 0.0" />
+            <mass value="0.017101340390358422" />
+            <inertia ixx="1.549111328599898e-06" iyy="5.397666576093341e-07" izz="1.3121409914107649e-06" ixy="9.06270196458266e-19" iyz="-1.185348480349763e-07" ixz="-3.958593655907756e-18" />
+        </inertial>
+        <visual name="thimble-v3_visual">
+            <origin xyz="-0.0019999999999999953 0.08013239215744962 0.0012499749089279547" rpy="-2.6717759420946425 3.0587699090649066e-19 -5.698435747712483e-20" />
+            <geometry>
+                <mesh filename="meshes/thimble-v3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="thimble-v3_collision">
+            <origin xyz="-0.0019999999999999953 0.08013239215744962 0.0012499749089279547" rpy="-2.6717759420946425 3.0587699090649066e-19 -5.698435747712483e-20" />
+            <geometry>
+                <mesh filename="meshes/thimble-v3.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="base_link">
+        <inertial>
+            <origin xyz="-2.5399269266485207e-09 -0.03597167695154545 -0.008233009121541629" rpy="0.0 0.0 0.0" />
+            <mass value="0.12233246834366321" />
+            <inertia ixx="5.91121041839972e-05" iyy="7.750828108867202e-06" izz="5.567957748298086e-05" ixy="-8.990962535521762e-12" iyz="-1.2869432253229753e-06" ixz="-1.4374371681515722e-12" />
+        </inertial>
+        <visual name="base_link_visual">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="base_link_collision">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/base_link.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="rev_frame_linkAC" type="revolute">
+        <origin xyz="0.0 0.006700930000000001 -0.00898528" rpy="-3.141592653589793 -1.5707963267948966 0" />
+        <parent link="old_component" />
+        <child link="link_AC" />
+        <axis xyz="0.0 0.0 1.0" />
+        <limit lower="-1.570796" upper="0.523599" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="rev_crank" type="revolute">
+        <origin xyz="0.0 -0.05875733 -0.00089316" rpy="-3.141592653589793 -1.5707963267948966 0" />
+        <parent link="old_component" />
+        <child link="rear_crank" />
+        <axis xyz="0.0 0.0 1.0" />
+        <limit lower="-0.785398" upper="0.349066" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="rev_crank2shaft" type="continuous">
+        <origin xyz="0.029810350000000003 0.01565537 0.0" rpy="-1.1555579666323415e-33 3.851859888774471e-34 -2.7755575615628907e-17" />
+        <parent link="rear_crank" />
+        <child link="connecting_rod" />
+        <axis xyz="-3.851859888774472e-34 -1.1555579666323415e-33 1.0" />
+    </joint>
+    <joint name="slider" type="prismatic">
+        <origin xyz="0.0 -0.0307701 0.0020816100000000002" rpy="2.886061618339154 -0.0 0.0" />
+        <parent link="old_component" />
+        <child link="slider_f" />
+        <axis xyz="0.0 0.9999997389609506 1.761027471069987e-07" />
+        <limit lower="-0.0095" upper="0.0095" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="rev_linkAC2linkCE" type="continuous">
+        <origin xyz="0.042984150000000006 -0.03827797 0.0" rpy="-1.925929944387236e-33 -7.703719777548943e-34 -2.7755575615628914e-17" />
+        <parent link="link_AC" />
+        <child link="link_CE" />
+        <axis xyz="7.703719777548943e-34 -1.925929944387236e-33 1.0" />
+    </joint>
+    <joint name="rev_slider2linkBC" type="continuous">
+        <origin xyz="0.009000000000000001 0.0060142028274435605 0.0034800037931545227" rpy="-1.5707963267948966 1.3152652915442573 1.5707963267948966" />
+        <parent link="slider_f" />
+        <child link="link_BC" />
+        <axis xyz="0.0 1.3000027124613842e-33 1.0" />
+    </joint>
+    <joint name="rev_3links" type="continuous">
+        <origin xyz="0.042984150000000006 -0.03827797 0.0105" rpy="-1.925929944387236e-33 -7.703719777548943e-34 -2.7755575615628914e-17" />
+        <parent link="link_AC" />
+        <child link="link_BC" />
+        <axis xyz="7.703719777548943e-34 -1.925929944387236e-33 1.0" />
+    </joint>
+    <joint name="rev_linkBC2linkCE" type="continuous">
+        <origin xyz="-0.007428110000000002 -0.008327710000000002 0.0105" rpy="1.540743955509789e-33 -7.703719777548942e-34 2.7755575615628914e-17" />
+        <parent link="link_CE" />
+        <child link="link_BC" />
+        <axis xyz="1.5407439555097887e-33 -3.851859888774472e-34 1.0" />
+    </joint>
+    <joint name="rev_shaft2linkAC" type="continuous">
+        <origin xyz="0.024455499999999998 0.01180313 0.0" rpy="-1.925929944387236e-33 -7.703719777548943e-34 -2.7755575615628914e-17" />
+        <parent link="link_AC" />
+        <child link="connecting_rod" />
+        <axis xyz="7.703719777548943e-34 -1.925929944387236e-33 1.0" />
+    </joint>
+    <joint name="rev_linkCE2slider" type="revolute">
+        <origin xyz="-0.05306259 -0.02762568 0.0032500000000000003" rpy="1.540743955509789e-33 -7.703719777548942e-34 2.7755575615628914e-17" />
+        <parent link="link_CE" />
+        <child link="slider_t_2-v3" />
+        <axis xyz="1.5407439555097887e-33 -3.851859888774472e-34 1.0" />
+        <limit lower="0.0" upper="6.283185" effort="1000000" velocity="1000000" />
+    </joint>
+    <joint name="Scorrimento-35" type="prismatic">
+        <origin xyz="-0.0031172500000000024 0.00041691000000000145 0.0" rpy="-0.28379410921786064 -1.5707963267948966 0" />
+        <parent link="slider_t_2-v3" />
+        <child link="thimble-v3" />
+        <axis xyz="-1.8313511359370245e-35 0.9886456399985675 0.1502685200094245" />
+        <limit lower="-0.0075" upper="0.0075" effort="1000000" velocity="1000000" />
+    </joint>
+</robot>

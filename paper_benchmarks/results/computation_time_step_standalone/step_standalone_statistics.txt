@@ -1,0 +1,89 @@
+=======================================================
+HES Dynamics — Standalone Benchmark Statistics
+=======================================================
+URDF:           /home/mbari/ros2_ws/src/HES_DT_FDI/paper_benchmarks/urdf/assembly_with_hand.urdf
+dt:             0.001 s
+Total steps:    50000
+Wall clock:     76.86 s
+Simulated:      50.0 s
+RT factor:      1.54x
+Profile:        RAMP  theta=[-0.75, 0.09] rad  n_half=12500  ramp_v=0.067 rad/s
+
+--- Timing (ms) ---
+total_ms:
+  mean: 1.4937
+  std: 0.2980
+  min: 0.7415
+  median: 1.4041
+  p95: 2.1394
+  p99: 2.6935
+  max: 12.1005
+
+closure_ms:
+  mean: 1.3490
+  std: 0.2666
+  min: 0.6335
+  median: 1.2718
+  p95: 1.9209
+  p99: 2.4247
+  max: 11.9227
+
+compute_B_ms:
+  mean: 0.1041
+  std: 0.0336
+  min: 0.0708
+  median: 0.0941
+  p95: 0.1607
+  p99: 0.2415
+  max: 0.6775
+
+crba_ms:
+  mean: 0.0095
+  std: 0.0063
+  min: 0.0058
+  median: 0.0077
+  p95: 0.0176
+  p99: 0.0360
+  max: 0.1897
+
+ext_passive_ms:
+  mean: 0.0136
+  std: 0.0068
+  min: 0.0092
+  median: 0.0122
+  p95: 0.0204
+  p99: 0.0423
+  max: 0.2176
+
+rnea_ms:
+  mean: 0.0038
+  std: 0.0032
+  min: 0.0024
+  median: 0.0032
+  p95: 0.0062
+  p99: 0.0125
+  max: 0.1482
+
+total_ms:
+  mean: 1.4937
+  std: 0.2980
+  min: 0.7415
+  median: 1.4041
+  p95: 2.1394
+  p99: 2.6935
+  max: 12.1005
+
+--- Section Breakdown ---
+  closure: 1.3490 ms (90.3%)
+  compute_B: 0.1041 ms (7.0%)
+  crba: 0.0095 ms (0.6%)
+  ext_passive: 0.0136 ms (0.9%)
+  rnea: 0.0038 ms (0.3%)
+  other: 0.0137 ms (0.9%)
+
+--- Solver ---
+  closure_norm mean: 2.406e-06
+  closure_norm max:  5.045e-06
+  nfev mean:         2.0
+  nfev max:          2
+  at_limit:          0 / 50000

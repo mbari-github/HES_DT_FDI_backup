@@ -1,0 +1,26 @@
+====================================================================
+CLOSURE RESIDUAL ANALYSIS — Reviewer 1 Point 6
+====================================================================
+
+Mode: quasi-static scan — θ from 0.09 to -0.75 and back (1000 steps/dir)
+Solver tolerance: 1e-05
+
+Constraint pair                   Mean ‖eᵢ‖     Max ‖eᵢ‖    Max/tol
+--------------------------------------------------------------------
+TOTAL ‖e‖                         2.409e-06    5.045e-06      0.50x
+AC_end↔rod_end                    2.502e-08    6.303e-08      0.01x
+AC_end_2↔BC_end                   1.700e-06    3.562e-06      0.36x
+CE_end↔BC_end_2                   1.702e-06    3.571e-06      0.36x
+CE_end_2↔slider_t                 9.201e-08    1.608e-07      0.02x
+--------------------------------------------------------------------
+
+Forward / return sweep comparison (geometric test):
+  Max |fwd - rev| = 2.388e-08 m
+  Relative to max residual: 0.4733 %
+
+  -> Forward and return sweeps are IDENTICAL to <1%.
+     The closure residual is a pure function of theta.
+     The monotonic growth in Fig.5 is GEOMETRIC,
+     NOT an accumulation of constraint violation over time.
+
+  |corr(||e||, theta)| = 0.9922  (expected ~1.0 for geometric)

@@ -1,0 +1,120 @@
+# ════════════════════════════════════════════════════════════════════
+# healthy_regimes.yaml
+# ════════════════════════════════════════════════════════════════════
+# Sequence of operating regimes for the healthy multi-regime baseline.
+#
+# Each regime is described by:
+#   name:         label written into the bag manifest (and logs)
+#   duration:     duration in seconds
+#   kind:         'static' | 'ramp' | 'step_mix'
+#   params:       initial parameter set for external_wrench_pub
+#                 keys: frequency [Hz], f_min [N], f_max [N]
+#
+# For 'ramp' regimes the 'end_params' field defines the target values;
+# the scheduler discretizes the ramp into 'n_steps' constant sub-windows
+# (default 16 for an 8-min ramp = 30s per sub-step).
+#
+# For 'step_mix' regimes a 'cycle' list is provided: the scheduler cycles
+# through it with 'step_duration' seconds per step.
+#
+# Total baseline length: ~60 min (3600 s).
+# ════════════════════════════════════════════════════════════════════
+
+regime_scheduler:
+  ros__parameters:
+
+    # Target node whose parameters are updated.
+    target_node:    '/input'
+
+    # Names of the parameters on the target node.
+    param_frequency: 'frequency'
+    param_f_min:     'f_min'
+    param_f_max:     'f_max'
+
+    # Settle time after each parameter change before logging continues
+    # (the bag still records during settling; this only affects log
+    # markers in the manifest).
+    settle_time:     0.5
+
+    # Path where the regime-transition manifest is written (JSON).
+    # Relative paths are resolved against the directory where the
+    # launch is started.
+    manifest_path:   'baseline_manifest.json'
+
+    # ──────────────────────────────────────────────────────────────
+    # Sequence of regimes (60 minutes total)
+    # ──────────────────────────────────────────────────────────────
+    # ROS 2 parameters do not natively support nested lists of dicts.
+    # We encode the sequence as a JSON string that the scheduler parses.
+    sequence_json: |
+      [
+        {
+          "name": "S1_slow_weak",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.025, "f_min": -8.0,  "f_max": 0.0}
+        },
+        {
+          "name": "S2_nominal",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.05,  "f_min": -12.0, "f_max": 0.0}
+        },
+        {
+          "name": "S3_medium_wide",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.10,  "f_min": -10.0, "f_max": 0.0}
+        },
+        {
+          "name": "S4_rhythmic",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.20,  "f_min": -6.0,  "f_max": 0.0}
+        },
+        {
+          "name": "S5_fast_active",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.30,  "f_min": -5.0,  "f_max": 0.0}
+        },
+        {
+          "name": "S6_offset_low",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.05,  "f_min": -8.0,  "f_max": -2.0}
+        },
+        {
+          "name": "S7_offset_wide",
+          "kind": "static",
+          "duration": 300.0,
+          "params": {"frequency": 0.10,  "f_min": -12.0, "f_max": -3.0}
+        },
+        {
+          "name": "R1_freq_sweep",
+          "kind": "ramp",
+          "duration": 480.0,
+          "n_steps": 16,
+          "params":     {"frequency": 0.025, "f_min": -8.0, "f_max": 0.0},
+          "end_params": {"frequency": 0.30,  "f_min": -8.0, "f_max": 0.0}
+        },
+        {
+          "name": "R2_amp_sweep",
+          "kind": "ramp",
+          "duration": 480.0,
+          "n_steps": 16,
+          "params":     {"frequency": 0.10, "f_min": -3.0,  "f_max": 0.0},
+          "end_params": {"frequency": 0.10, "f_min": -12.0, "f_max": 0.0}
+        },
+        {
+          "name": "M1_step_mix",
+          "kind": "step_mix",
+          "duration": 540.0,
+          "step_duration": 30.0,
+          "cycle": [
+            {"frequency": 0.05, "f_min": -10.0, "f_max":  0.0},
+            {"frequency": 0.20, "f_min":  -5.0, "f_max":  0.0},
+            {"frequency": 0.10, "f_min":  -8.0, "f_max": -2.0}
+          ]
+        }
+      ]

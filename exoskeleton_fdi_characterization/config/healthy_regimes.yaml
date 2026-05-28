@@ -1,0 +1,187 @@
+# healthy_regimes.yaml — Full characterization baseline (~58 minutes)
+# ═══════════════════════════════════════════════════════════════════
+#
+# Comprehensive operating-space sweep for the healthy-mode baseline.
+# Covers the full envelope of the exoskeleton:
+#   frequency axis : 0.02 – 0.25 Hz  (ultra-slow → near-resonance)
+#   force axis     : -4  – -18 Nm    (light → heavy external load)
+#
+# Sequence summary
+# ────────────────
+#   SETTLE          (  3 min)  cold-start convergence, ultra-slow/light
+#   RAMP × 4       (  4 min)  smooth transitions between speed regimes
+#   SLOW  × 3      ( 12 min)  0.05 Hz, light / medium / heavy load
+#   NOMINAL × 3    ( 12 min)  0.10 Hz, light / medium / heavy load
+#   FAST  × 2      (  8 min)  0.20 Hz, light / medium load
+#   NEAR_RES × 2   (  6 min)  0.25 Hz, light / medium (near resonance)
+#   MIX_wide       (  8 min)  step_mix, 40-s steps, 6 corner conditions
+#   MIX_transitions(  4 min)  step_mix, 20-s steps, 8 abrupt conditions
+#   Total          ≈ 58 min
+#
+# Kind reference
+#   static   : constant params held for 'duration' s
+#   ramp     : linearly interpolates params→end_params in n_steps sub-windows
+#   step_mix : cycles through 'cycle' list, each 'step_duration' s, until
+#              'duration' is reached  (key is 'cycle', NOT 'params_list')
+# ═══════════════════════════════════════════════════════════════════
+
+regime_scheduler:
+  ros__parameters:
+
+    target_node:     '/input'
+    param_frequency: 'frequency'
+    param_f_min:     'f_min'
+    param_f_max:     'f_max'
+    settle_time:     0.5
+    manifest_path:   'baseline_manifest.json'
+
+    sequence_json: |
+      [
+        {
+          "name": "SETTLE",
+          "kind": "static",
+          "duration": 180.0,
+          "params": {"frequency": 0.02, "f_min": -4.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "RAMP_settle_to_slow",
+          "kind": "ramp",
+          "duration": 60.0,
+          "n_steps": 6,
+          "params":     {"frequency": 0.02, "f_min": -4.0,  "f_max": 0.0},
+          "end_params": {"frequency": 0.05, "f_min": -6.0,  "f_max": 0.0}
+        },
+
+        {
+          "name": "SLOW_light",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.05, "f_min": -6.0, "f_max": 0.0}
+        },
+        {
+          "name": "SLOW_medium",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.05, "f_min": -12.0, "f_max": 0.0}
+        },
+        {
+          "name": "SLOW_heavy",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.05, "f_min": -18.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "RAMP_slow_to_nominal",
+          "kind": "ramp",
+          "duration": 60.0,
+          "n_steps": 6,
+          "params":     {"frequency": 0.05, "f_min": -12.0, "f_max": 0.0},
+          "end_params": {"frequency": 0.10, "f_min": -12.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "NOMINAL_light",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.10, "f_min": -6.0, "f_max": 0.0}
+        },
+        {
+          "name": "NOMINAL_medium",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.10, "f_min": -12.0, "f_max": 0.0}
+        },
+        {
+          "name": "NOMINAL_heavy",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.10, "f_min": -18.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "RAMP_nominal_to_fast",
+          "kind": "ramp",
+          "duration": 60.0,
+          "n_steps": 6,
+          "params":     {"frequency": 0.10, "f_min": -12.0, "f_max": 0.0},
+          "end_params": {"frequency": 0.20, "f_min": -6.0,  "f_max": 0.0}
+        },
+
+        {
+          "name": "FAST_light",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.20, "f_min": -6.0, "f_max": 0.0}
+        },
+        {
+          "name": "FAST_medium",
+          "kind": "static",
+          "duration": 240.0,
+          "params": {"frequency": 0.20, "f_min": -12.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "RAMP_fast_to_near_res",
+          "kind": "ramp",
+          "duration": 60.0,
+          "n_steps": 6,
+          "params":     {"frequency": 0.20, "f_min": -6.0,  "f_max": 0.0},
+          "end_params": {"frequency": 0.25, "f_min": -6.0,  "f_max": 0.0}
+        },
+
+        {
+          "name": "NEAR_RES_light",
+          "kind": "static",
+          "duration": 180.0,
+          "params": {"frequency": 0.25, "f_min": -6.0, "f_max": 0.0}
+        },
+        {
+          "name": "NEAR_RES_medium",
+          "kind": "static",
+          "duration": 180.0,
+          "params": {"frequency": 0.25, "f_min": -10.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "RAMP_near_res_to_mix",
+          "kind": "ramp",
+          "duration": 60.0,
+          "n_steps": 6,
+          "params":     {"frequency": 0.25, "f_min": -8.0,  "f_max": 0.0},
+          "end_params": {"frequency": 0.10, "f_min": -10.0, "f_max": 0.0}
+        },
+
+        {
+          "name": "MIX_wide",
+          "kind": "step_mix",
+          "duration": 480.0,
+          "step_duration": 40.0,
+          "cycle": [
+            {"frequency": 0.05, "f_min": -6.0,  "f_max": 0.0},
+            {"frequency": 0.10, "f_min": -12.0, "f_max": 0.0},
+            {"frequency": 0.15, "f_min": -8.0,  "f_max": 0.0},
+            {"frequency": 0.20, "f_min": -6.0,  "f_max": 0.0},
+            {"frequency": 0.05, "f_min": -18.0, "f_max": 0.0},
+            {"frequency": 0.10, "f_min": -18.0, "f_max": 0.0}
+          ]
+        },
+
+        {
+          "name": "MIX_transitions",
+          "kind": "step_mix",
+          "duration": 240.0,
+          "step_duration": 20.0,
+          "cycle": [
+            {"frequency": 0.10, "f_min": -4.0,  "f_max": 0.0},
+            {"frequency": 0.20, "f_min": -15.0, "f_max": 0.0},
+            {"frequency": 0.05, "f_min": -10.0, "f_max": 0.0},
+            {"frequency": 0.25, "f_min": -6.0,  "f_max": 0.0},
+            {"frequency": 0.10, "f_min": -18.0, "f_max": 0.0},
+            {"frequency": 0.15, "f_min": -12.0, "f_max": 0.0},
+            {"frequency": 0.02, "f_min": -10.0, "f_max": 0.0},
+            {"frequency": 0.20, "f_min": -8.0,  "f_max": 0.0}
+          ]
+        }
+      ]

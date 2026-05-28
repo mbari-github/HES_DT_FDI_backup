@@ -1,0 +1,91 @@
+# ════════════════════════════════════════════════════════════════════
+# fdi_params.yaml
+# ════════════════════════════════════════════════════════════════════
+# Fault Detection and Isolation parameters.
+#
+# Thresholds are conservative defaults. Calibrate by running the system
+# in healthy mode and observing the filtered residuals on /fdi/debug:
+#
+#   ros2 topic echo /fdi/debug
+#
+# A good starting point is:
+#   thresh = 3 * max(filtered_residual) observed during healthy operation
+# ════════════════════════════════════════════════════════════════════
+
+fdi_node:
+  ros__parameters:
+
+    # ════════════════════════════════════════════════════════════════
+    # BASE CONFIGURATION
+    # ════════════════════════════════════════════════════════════════
+    joint_name:     'rev_crank'
+    publish_rate:   200.0           # [Hz] — must match plant publish rate
+
+    # ════════════════════════════════════════════════════════════════
+    # PLANT MODEL  (must match dynamics_params.yaml exactly)
+    # ════════════════════════════════════════════════════════════════
+    fric_visc:      2.0             # [Nm*s/rad]  viscous friction
+    fric_coul:      2.0             # [Nm]        Coulomb friction
+    fric_eps:       0.005           # [rad/s]     tanh threshold for Coulomb
+    damping_theta:  1.0             # [Nm*s/rad]  additional linear damping
+
+    # ════════════════════════════════════════════════════════════════
+    # ADMITTANCE INVERSION  (R_force — channel 0: tau_ext sensor)
+    # ════════════════════════════════════════════════════════════════
+    # Reconstructs tau_ext from trajectory reference.
+    # ALL parameters MUST match the admittance_controller defaults.
+
+    adm_M_virt:           0.5       # [kg*rad^2]   virtual inertia
+    adm_D_virt:           5.0       # [Nm*s/rad]   virtual damping
+    adm_K_virt:           2.0       # [Nm/rad]     virtual stiffness
+    adm_theta_eq:         0.0       # [rad]        equilibrium position
+    adm_force_deadband:   0.0       # [Nm]         force deadband
+
+    adm_theta_ref_min:   -0.75      # [rad]        lower theta_ref limit
+    adm_theta_ref_max:    0.09      # [rad]        upper theta_ref limit
+    adm_wall_buffer:      0.05      # [rad]        buffer width for virtual wall
+    adm_K_wall:          80.0       # [Nm/rad]     wall stiffness
+    adm_D_wall:          10.0       # [Nm*s/rad]   wall damping
+
+    # ════════════════════════════════════════════════════════════════
+    # LUENBERGER OBSERVER  (R_encoder — channel 3: encoder)
+    # ════════════════════════════════════════════════════════════════
+    # Observer poles must be faster than plant poles.
+    # Linearized plant: lambda1=0, lambda2 ≈ -20.
+    # Keep |pole| < 200 for explicit Euler stability at dt=5 ms.
+    enc_obs_pole_1:    -15.0
+    enc_obs_pole_2:    -20.0
+
+    # ════════════════════════════════════════════════════════════════
+    # DETECTION THRESHOLDS
+    # ════════════════════════════════════════════════════════════════
+    # Calibrate by running healthy and observing /fdi/debug:
+    #   field [8]  = r_force_filtered
+    #   field [9]  = r_encoder_filtered
+    # Set threshold ≈ 3-5x the maximum observed healthy value.
+    thresh_force:     0.0150            # [Nm]      force residual threshold
+    thresh_encoder:   0.0250           # [rad]     encoder residual threshold
+
+    # ════════════════════════════════════════════════════════════════
+    # DEBOUNCE
+    # ════════════════════════════════════════════════════════════════
+    # Number of consecutive samples above threshold to confirm fault.
+    # At 200 Hz:  10 samples ≈ 50 ms,  20 samples ≈ 100 ms.
+    debounce_count:   5
+
+    # ════════════════════════════════════════════════════════════════
+    # EMA FILTER
+    # ════════════════════════════════════════════════════════════════
+    # EMA coefficient for residual filtering.
+    #   alpha = 0.1  → time constant ≈ 50 ms at 200 Hz (recommended)
+    #   alpha = 0.05 → time constant ≈ 100 ms (more filtered)
+    #   alpha = 1.0  → no filter (raw residual)
+    residual_alpha:   0.1000
+
+    # ════════════════════════════════════════════════════════════════
+    # HOLD TIMER
+    # ════════════════════════════════════════════════════════════════
+    # Once a fault is declared, hold the diagnosis for this duration
+    # to prevent oscillation caused by cross-triggering (Ch0 ↔ Ch3).
+    # At 200 Hz:  500 ms = 100 steps.
+    hold_time_ms:     500

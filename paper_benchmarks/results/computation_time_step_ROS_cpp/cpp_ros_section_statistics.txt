@@ -1,0 +1,27 @@
+=== Section Timing Statistics ===
+
+closure_ms:
+  Mean: 0.0109 ms
+  Std:  0.0205 ms
+  Max:  0.6803 ms
+
+compute_B_ms:
+  Mean: 0.0126 ms
+  Std:  0.0106 ms
+  Max:  0.1984 ms
+
+crba_ms:
+  Mean: 0.0068 ms
+  Std:  0.0069 ms
+  Max:  0.2389 ms
+
+ext_passive_ms:
+  Mean: 0.0006 ms
+  Std:  0.0018 ms
+  Max:  0.0659 ms
+
+rnea_ms:
+  Mean: 0.0035 ms
+  Std:  0.0046 ms
+  Max:  0.1721 ms
+

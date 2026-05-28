@@ -1,0 +1,60 @@
+# ════════════════════════════════════════════════════════════════════
+# fault_framework_params.yaml
+# ════════════════════════════════════════════════════════════════════
+# Default parameters for the multi-channel fault framework.
+#
+# At startup the framework runs as a permanent transparent proxy on
+# all four channels. Faults are armed at runtime via:
+#
+#   ros2 param set /fault_injector active_channel <0|1|2|3|-1>
+#   ros2 param set /fault_injector fault_type     <type>
+#   ros2 param set /fault_injector fault_magnitude <value>
+#   ros2 param set /fault_injector fault_active   true
+#
+# Channels:
+#   0 → /exo_dynamics/tau_ext_theta  (load cell / external force)
+#   1 → /trajectory_ref              (admittance reference)
+#   2 → /torque                      (controller torque command)
+#   3 → /joint_states                (encoder feedback)
+#  -1 → no channel armed (default)
+#
+# Available fault types:
+#   none, offset, scale, noise, freeze, spike, drift_linear,
+#   drift_parabolic, bias_drift, quantization, deadzone, saturation,
+#   dropout, delay
+# ════════════════════════════════════════════════════════════════════
+
+fault_injector:
+  ros__parameters:
+
+    # ── Global control ───────────────────────────────────────────────
+    # Default: passthrough only on all channels.
+    active_channel:        -1
+    fault_active:          false
+
+    # ── Legacy single-fault parameters ──────────────────────────────
+    # Used when fault_pipeline_config is empty (mode A).
+    fault_type:            'offset'
+    fault_magnitude:       1.0
+    noise_std:             0.1
+    spike_duration:        0.05
+
+    # ── Pipeline JSON (mode B) ──────────────────────────────────────
+    # When non-empty, takes precedence over the legacy parameters.
+    # Example for compound sensor degradation:
+    #   '[{"type":"bias_drift","std":0.001},
+    #     {"type":"noise","std":0.01},
+    #     {"type":"quantization","resolution":0.005}]'
+    fault_pipeline_config: '[]'
+
+    # ── Channel-specific parameters ─────────────────────────────────
+    # Ch3 (joint_states): which joint and which field to corrupt.
+    joint_name:            'rev_crank'
+    fault_js_field:        'position'   # 'position', 'velocity', or 'both'
+
+    # Ch1 (trajectory_ref): which entry of the array.
+    # 0 = theta_ref, 1 = theta_dot_ref, 2 = theta_ddot_ref
+    target_index:          0
+
+    # ── Status publication rate ─────────────────────────────────────
+    publish_rate:          200.0

@@ -1,0 +1,8 @@
+Mean (ms): 0.0130
+Std (ms): 0.0373
+Min (ms): 0.0072
+Median (ms): 0.0098
+P95 (ms): 0.0194
+P99 (ms): 0.0463
+Max (ms): 7.2757
+Total Steps: 50000

@@ -1,0 +1,25 @@
+# fault_sweep_test.yaml -- Short test version (~5 minutes total)
+# Used to verify the characterization pipeline works before running full sweep.
+
+fault_orchestrator:
+  ros__parameters:
+
+    target_node:          '/fault_injector'
+    param_active_channel: 'active_channel'
+    param_fault_active:   'fault_active'
+    param_fault_type:     'fault_type'
+    param_fault_magnitude: 'fault_magnitude'
+    param_noise_std:      'noise_std'
+    param_spike_duration: 'spike_duration'
+    healthy_pre_duration:   10.0
+    fault_duration:        30.0
+    healthy_post_duration:  10.0
+    manifest_path:        'fault_sweep_manifest.json'
+
+    sweep_json: |
+      [
+        {"channel": 0, "type": "offset",       "magnitudes": [0.5]},
+        {"channel": 0, "type": "noise",        "magnitudes": [0.1], "param": "noise_std"},
+        {"channel": 3, "type": "offset",       "magnitudes": [0.05]},
+        {"channel": 3, "type": "noise",        "magnitudes": [0.01], "param": "noise_std"}
+      ]

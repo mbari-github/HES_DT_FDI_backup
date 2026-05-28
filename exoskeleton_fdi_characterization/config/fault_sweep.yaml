@@ -1,0 +1,133 @@
+# fault_sweep.yaml — Full characterization sweep (~76 minutes)
+# ═══════════════════════════════════════════════════════════════════
+#
+# Systematic fault injection over (channel × type × magnitude).
+# Provides enough points per ROC curve for scientific threshold derivation.
+#
+# Window timing  (seconds)
+#   healthy_pre_duration  : 12  (baseline settling after previous window)
+#   fault_duration        : 40  (residual accumulation; enough for drift buildup)
+#   healthy_post_duration :  8  (recovery capture before disarm)
+#   per window total      : 60
+#
+# Fault types used
+#   offset       : additive bias.  magnitude [unit]
+#   noise        : zero-mean Gaussian. aux param = noise_std [unit std]
+#   scale        : multiplicative gain. magnitude = gain factor (1.0 = nominal)
+#   drift_linear : ramp drift accumulating over time. magnitude = rate [unit/step]
+#   spike        : periodic impulse. aux param = spike_duration [s]
+#   freeze       : signal frozen at last value.  magnitude unused (set to 1.0)
+#
+# Window count
+#   Channel 0 (tau_ext sensor, Nm)
+#     offset        : 10 magnitudes
+#     noise         :  8 magnitudes
+#     scale         :  8 magnitudes
+#     drift_linear  :  6 magnitudes
+#     spike         :  5 magnitudes
+#     freeze        :  1 magnitude
+#   Channel 0 subtotal : 38 windows
+#
+#   Channel 3 (joint encoder, rad)
+#     offset        : 10 magnitudes
+#     noise         :  8 magnitudes
+#     scale         :  8 magnitudes
+#     drift_linear  :  6 magnitudes
+#     spike         :  5 magnitudes
+#     freeze        :  1 magnitude
+#   Channel 3 subtotal : 38 windows
+#
+#   Grand total: 76 windows × 60 s ≈ 76 min
+#
+# Magnitude design rationale
+#   offset   : spans ~1/10 threshold → 2000× threshold  (full ROC)
+#   noise    : spans sub-threshold std → 10× std
+#   scale    : both under-gain (0.50–0.95) and over-gain (1.05–2.00)
+#   drift    : lowest detectable rate (threshold / fault_duration) → 5× that
+#   spike    : spike_duration from one sample (5 ms) to 1 s
+#   freeze   : qualitative, single window for behaviour documentation
+#
+# NOTE: Ch0 tau_ext offset faults are partially compensated by the admittance
+# controller; r_force residual is small while r_encoder diverges.  This is a
+# known FDI design characteristic — document it in the sweep report.
+# ═══════════════════════════════════════════════════════════════════
+
+fault_orchestrator:
+  ros__parameters:
+
+    target_node:           '/fault_injector'
+    param_active_channel:  'active_channel'
+    param_fault_active:    'fault_active'
+    param_fault_type:      'fault_type'
+    param_fault_magnitude: 'fault_magnitude'
+    param_noise_std:       'noise_std'
+    param_spike_duration:  'spike_duration'
+
+    healthy_pre_duration:   12.0
+    fault_duration:         40.0
+    healthy_post_duration:   8.0
+
+    manifest_path: 'fault_sweep_manifest.json'
+
+    sweep_json: |
+      [
+        {
+          "channel": 0, "type": "offset",
+          "magnitudes": [0.001, 0.005, 0.010, 0.020, 0.050,
+                         0.100, 0.200, 0.500, 1.000, 2.000]
+        },
+        {
+          "channel": 0, "type": "noise",
+          "magnitudes": [0.005, 0.010, 0.020, 0.050,
+                         0.100, 0.200, 0.500, 1.000],
+          "param": "noise_std"
+        },
+        {
+          "channel": 0, "type": "scale",
+          "magnitudes": [0.50, 0.70, 0.80, 0.90,
+                         1.10, 1.20, 1.50, 2.00]
+        },
+        {
+          "channel": 0, "type": "drift_linear",
+          "magnitudes": [0.001, 0.002, 0.005, 0.010, 0.020, 0.050]
+        },
+        {
+          "channel": 0, "type": "spike",
+          "magnitudes": [0.005, 0.010, 0.050, 0.200, 0.500],
+          "param": "spike_duration"
+        },
+        {
+          "channel": 0, "type": "freeze",
+          "magnitudes": [1.0]
+        },
+
+        {
+          "channel": 3, "type": "offset",
+          "magnitudes": [0.0002, 0.0005, 0.001, 0.002, 0.005,
+                         0.010,  0.020,  0.050, 0.100, 0.200]
+        },
+        {
+          "channel": 3, "type": "noise",
+          "magnitudes": [0.0005, 0.001, 0.002, 0.005,
+                         0.010,  0.020, 0.050, 0.100],
+          "param": "noise_std"
+        },
+        {
+          "channel": 3, "type": "scale",
+          "magnitudes": [0.50, 0.70, 0.80, 0.90,
+                         1.10, 1.20, 1.50, 2.00]
+        },
+        {
+          "channel": 3, "type": "drift_linear",
+          "magnitudes": [0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005]
+        },
+        {
+          "channel": 3, "type": "spike",
+          "magnitudes": [0.005, 0.010, 0.050, 0.200, 0.500],
+          "param": "spike_duration"
+        },
+        {
+          "channel": 3, "type": "freeze",
+          "magnitudes": [1.0]
+        }
+      ]

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>exoskeleton_fdi_characterization</name>
+  <version>0.1.0</version>
+  <description>
+    FDI Phase 0 — characterization infrastructure.
+
+    Provides scheduler nodes, launch files, and offline analysis scripts
+    to record:
+    (a) healthy multi-regime baselines, with the trajectory input
+        parameters varied automatically through a YAML-defined sequence,
+    (b) systematic fault-injection sweeps over (channel x type x magnitude)
+        with per-window metadata recorded in a manifest.json file.
+
+    Output: rosbag2 archives + manifest, suitable for offline calibration
+    of FDI thresholds in Phases 3-5.
+
+    This package is a development tool. It is not part of the runtime
+    safety chain and should not be loaded in production deployments.
+  </description>
+
+  <maintainer email="dev@example.com">FDI maintainer</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>rcl_interfaces</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>exoskeleton_safety_msgs</depend>
+
+  <exec_depend>ros2bag</exec_depend>
+  <exec_depend>rosbag2_storage_default_plugins</exec_depend>
+  <exec_depend>rosbag2_transport</exec_depend>
+  <exec_depend>exoskeleton_dynamics</exec_depend>
+  <exec_depend>exoskeleton_control</exec_depend>
+  <exec_depend>exoskeleton_faults</exec_depend>
+  <exec_depend>exoskeleton_observers</exec_depend>
+  <exec_depend>exoskeleton_utils</exec_depend>
+  <exec_depend>exoskeleton_bringup</exec_depend>
+  <exec_depend>exoskeleton_description</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

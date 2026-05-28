@@ -1,0 +1,26 @@
+===========================================================================
+DT-SWEEP ANALYSIS REPORT — Bdot Finite-Difference Sensitivity
+===========================================================================
+
+Reference dt: 0.10000 ms
+Torque profile: sine, A=3.5 Nm, T=10.0 s
+Simulation duration: 10.0 s
+Warmup: 1.0 s
+URDF: /home/mbari/ros2_ws/src/HES_DT_FDI/paper_benchmarks/urdf/assembly_with_hand.urdf
+Model nv: 9
+
+---------------------------------------------------------------------------
+dt [ms]      RMSE(θ)         max|Δθ|         RMSE(θ̇)        RMSE(M_eff)     RMSE(proj)      RMSE(Bdot)      Stable  
+---------------------------------------------------------------------------
+0.1000       0.000e+00       0.000e+00       0.000e+00       0.000e+00       0.000e+00       0.000e+00       YES     
+0.5000       1.066e-04       2.349e-04       1.297e-04       4.960e-07       1.412e-05       7.667e-03       YES     
+1.0000       1.559e-03       3.047e-03       2.975e-03       2.448e-06       2.653e-04       1.126e-02       YES     
+2.0000       9.881e-03       1.824e-02       1.307e-02       1.494e-05       1.640e-03       3.019e-02       YES     
+---------------------------------------------------------------------------
+
+Notes:
+  - All RMSE computed relative to reference dt = 0.10000 ms
+  - All trajectories interpolated onto reference time grid
+  - RMSE(Bdot) = mean RMSE across all Bdot components
+  - Bdot approximated as first-order finite difference: Bdot = (B_k - B_{k-1}) / dt
+

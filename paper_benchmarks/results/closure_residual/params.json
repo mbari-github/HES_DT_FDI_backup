@@ -1,0 +1,15 @@
+{
+  "urdf": "/home/mbari/ros2_ws/src/HES_DT_FDI/paper_benchmarks/urdf/assembly_with_hand.urdf",
+  "mode": "scan",
+  "scan_steps": 500,
+  "theta_min": -0.75,
+  "theta_max": 0.09,
+  "pair_labels": [
+    "AC_end\u2194rod_end",
+    "AC_end_2\u2194BC_end",
+    "CE_end\u2194BC_end_2",
+    "CE_end_2\u2194slider_t"
+  ],
+  "amplitude": null,
+  "period": null
+}

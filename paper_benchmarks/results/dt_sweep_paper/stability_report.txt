@@ -1,0 +1,18 @@
+====================================================================
+STABILITY ANALYSIS — Euler integrator chattering detection
+====================================================================
+
+Torque profile : sine,  A = 3.5 Nm,  T = 10.0 s
+Friction mode  : nominal — fric_coul=2.0, fric_visc=2.0, damping=1.0
+Chattering criterion: sign inversion rate > 50 %
+
+dt [ms]       Steps  Sign inv.   Rate [%]  θ range [rad]       Status
+--------------------------------------------------------------------
+0.1000        90000          1       0.0%         0.6949       stable
+0.5000        18000          1       0.0%         0.6948       stable
+1.0000         9000       1885      20.9%         0.6958       stable
+2.0000         4500       1628      36.2%         0.6951       stable
+--------------------------------------------------------------------
+
+Interpretation:
+  All tested dt values are stable (no chattering detected).

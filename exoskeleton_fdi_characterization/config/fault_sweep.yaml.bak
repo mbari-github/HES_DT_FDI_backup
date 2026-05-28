@@ -1,0 +1,95 @@
+# ════════════════════════════════════════════════════════════════════
+# fault_sweep.yaml
+# ════════════════════════════════════════════════════════════════════
+# Orchestrated fault-injection sweep over (channel x fault_type x magnitude).
+#
+# Cycle structure for each window:
+#   1. healthy_pre   : system idle for healthy_pre_duration seconds
+#   2. arm           : set active_channel, fault_type, fault_magnitude;
+#                      write a START marker in the manifest
+#   3. fault_active  : keep fault armed for fault_duration seconds
+#   4. disarm        : fault_active=false, active_channel=-1;
+#                      write a STOP marker in the manifest
+#   5. healthy_post  : system idle for healthy_post_duration seconds
+#
+# A sweep is an ordered list of (channel, fault_type, magnitudes[])
+# triplets. The orchestrator iterates one window per (channel, type, mag).
+#
+# The default sweep below covers the four channels with the most
+# representative fault types and three magnitudes each. Total windows:
+# approximately 4 channels x 5 types x 3 magnitudes = 60 windows.
+# At ~50s per window = ~50 min. Adjust durations and magnitudes to
+# trade off coverage vs total run time.
+#
+# The orchestrator writes a JSON manifest with one entry per window:
+#   {
+#     "name": "Ch3_offset_0.05",
+#     "channel": 3, "type": "offset", "magnitude": 0.05,
+#     "t_arm": 1234.567,    // ROS time in seconds
+#     "t_disarm": 1264.567,
+#     "t_pre_start": 1224.567,
+#     "t_post_end":  1284.567
+#   }
+# ════════════════════════════════════════════════════════════════════
+
+fault_orchestrator:
+  ros__parameters:
+
+    # Target injector node (must match the fault_framework node name).
+    target_node:        '/fault_injector'
+
+    # Parameter names on the target injector.
+    param_active_channel: 'active_channel'
+    param_fault_active:   'fault_active'
+    param_fault_type:     'fault_type'
+    param_fault_magnitude: 'fault_magnitude'
+    param_noise_std:       'noise_std'
+    param_spike_duration:  'spike_duration'
+
+    # Per-window durations [seconds].
+    healthy_pre_duration:   10.0
+    fault_duration:         30.0
+    healthy_post_duration:  10.0
+
+    # Path for the manifest file (JSON, one record per window).
+    manifest_path:         'fault_sweep_manifest.json'
+
+    # Sweep definition. Encoded as JSON for the same reason as
+    # healthy_regimes (ROS 2 params do not nest list-of-dict cleanly).
+    #
+    # Each entry: {channel, type, magnitudes: [..]}.
+    # 'noise_std' and 'spike_duration' are also configurable per-entry
+    # for fault types that need them (noise, spike).
+    #
+    # Magnitudes are chosen to span subtle (near baseline noise) to
+    # severe (clearly anomalous) per channel:
+    #   Ch0 (tau_ext, Nm):   small=0.2,  medium=1.0,  large=3.0
+    #   Ch1 (theta_ref, rad): small=0.02, medium=0.1,  large=0.3
+    #   Ch2 (torque, Nm):     small=0.2,  medium=1.0,  large=3.0
+    #   Ch3 (joint_states, rad): small=0.02, medium=0.05, large=0.15
+    sweep_json: |
+      [
+        {"channel": 0, "type": "offset",       "magnitudes": [0.2, 1.0, 3.0]},
+        {"channel": 0, "type": "scale",        "magnitudes": [0.5, 1.5, 2.0]},
+        {"channel": 0, "type": "noise",        "magnitudes": [0.05, 0.2, 1.0],  "param": "noise_std"},
+        {"channel": 0, "type": "drift_linear", "magnitudes": [0.0005, 0.002, 0.01]},
+        {"channel": 0, "type": "freeze",       "magnitudes": [0.0]},
+
+        {"channel": 1, "type": "offset",       "magnitudes": [0.02, 0.1, 0.3]},
+        {"channel": 1, "type": "scale",        "magnitudes": [0.5, 1.5, 2.0]},
+        {"channel": 1, "type": "noise",        "magnitudes": [0.005, 0.02, 0.1], "param": "noise_std"},
+        {"channel": 1, "type": "drift_linear", "magnitudes": [0.00005, 0.0002, 0.001]},
+        {"channel": 1, "type": "freeze",       "magnitudes": [0.0]},
+
+        {"channel": 2, "type": "offset",       "magnitudes": [0.2, 1.0, 3.0]},
+        {"channel": 2, "type": "scale",        "magnitudes": [0.5, 1.5, 2.0]},
+        {"channel": 2, "type": "noise",        "magnitudes": [0.05, 0.2, 1.0],  "param": "noise_std"},
+        {"channel": 2, "type": "drift_linear", "magnitudes": [0.0005, 0.002, 0.01]},
+        {"channel": 2, "type": "freeze",       "magnitudes": [0.0]},
+
+        {"channel": 3, "type": "offset",       "magnitudes": [0.02, 0.05, 0.15]},
+        {"channel": 3, "type": "scale",        "magnitudes": [0.7, 1.3, 1.8]},
+        {"channel": 3, "type": "noise",        "magnitudes": [0.001, 0.005, 0.02], "param": "noise_std"},
+        {"channel": 3, "type": "drift_linear", "magnitudes": [0.00002, 0.0001, 0.0005]},
+        {"channel": 3, "type": "freeze",       "magnitudes": [0.0]}
+      ]

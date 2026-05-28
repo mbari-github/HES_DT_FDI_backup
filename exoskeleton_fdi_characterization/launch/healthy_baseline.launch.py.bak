@@ -1,0 +1,164 @@
+"""
+healthy_baseline.launch.py
+============================
+
+Records the 60-minute healthy multi-regime baseline.
+
+Topology
+--------
+    dynamics  ──► (canonical sensor topics, no fault framework here)
+    admittance / trajectory controllers  ──► (canonical control topics)
+    observer  ──► (residual topics for offline calibration in Phase 4)
+    external_wrench_pub  ──► /exo_dynamics/external_wrench
+    regime_scheduler  ──► sets external_wrench_pub parameters via service
+    rosbag2 record  ──► records everything to disk
+
+NOTE — Fault framework is NOT launched here on purpose. The baseline
+is meant to be a "pure healthy" reference, with no proxy node in the
+data path that could introduce artefacts (e.g. timestamps slightly
+shifted, tiny extra latency). For sweep recording use
+fault_sweep.launch.py instead.
+
+Output
+------
+    ./bags/healthy_baseline_<timestamp>/      rosbag2 archive
+    ./baseline_manifest.json                   regime transition log
+
+Usage
+-----
+    ros2 launch exoskeleton_fdi_characterization healthy_baseline.launch.py
+
+The bag is recorded for the full duration of the regime sequence
+(~60 min by default). When the scheduler logs 'BASELINE COMPLETE',
+press Ctrl+C to stop the launch; rosbag2 will close the archive
+gracefully.
+"""
+
+from launch import LaunchDescription
+from launch.actions import ExecuteProcess
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
+import datetime
+
+
+def generate_launch_description():
+
+    description_pkg     = get_package_share_directory('exoskeleton_description')
+    bringup_pkg         = get_package_share_directory('exoskeleton_bringup')
+    char_pkg            = get_package_share_directory('exoskeleton_fdi_characterization')
+
+    urdf_file = os.path.join(description_pkg, 'urdf', 'assembly_with_hand.urdf')
+    with open(urdf_file, 'r') as f:
+        robot_description_content = f.read()
+
+    # ── Config files ─────────────────────────────────────────────────
+    regimes_yaml      = os.path.join(char_pkg,    'config', 'healthy_regimes.yaml')
+    fdi_params        = os.path.join(fdi_pkg,    'config', 'fdi_params.yaml')
+
+    # ── Bag output path ──────────────────────────────────────────────
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    bag_path  = os.path.join('bags', f'healthy_baseline_{timestamp}')
+
+    # ── Topics to record ─────────────────────────────────────────────
+    # See README of the package for a justification of each entry.
+    record_topics = [
+        # Plant
+        '/joint_states',
+        '/exo_dynamics/tau_ext_theta',
+        '/exo_dynamics/debug',
+        '/exo_dynamics/ff_terms',
+        '/exo_dynamics/external_wrench',
+        # Control
+        '/torque',
+        '/torque_raw',
+        '/trajectory_ref',
+        '/trajectory_ref_raw',
+        '/admittance/debug',
+        '/traj_ctrl/debug',
+        # FDI (new) — residuals and diagnosis
+        '/fdi/debug',
+        '/fdi/diagnosis',
+        '/fdi/residuals',
+    ]
+
+    # ── Bag recorder ─────────────────────────────────────────────────
+    bag_record = ExecuteProcess(
+        cmd=['ros2', 'bag', 'record', '-o', bag_path] + record_topics,
+        output='screen',
+    )
+
+    return LaunchDescription([
+
+        # ── Robot State Publisher ────────────────────────────────────
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': robot_description_content}],
+        ),
+
+        # ── Plant dynamics ───────────────────────────────────────────
+        # No remap to *_raw because the fault framework is NOT in this
+        # launch. Dynamics publishes directly on canonical topics.
+        Node(
+            package='exoskeleton_dynamics',
+            executable='exo_dynamics',
+            name='dynamics',
+            output='screen',
+        ),
+
+        # ── External wrench input (parameters driven by scheduler) ───
+        # Initial parameters are set here; the scheduler overrides them
+        # at runtime via /input/set_parameters.
+        Node(
+            package='exoskeleton_utils',
+            executable='external_wrench_pub',
+            name='input',
+            output='screen',
+            parameters=[{
+                'frequency': 0.05,
+                'f_min':    -12.0,
+                'f_max':     0.0,
+            }],
+        ),
+
+        # ── Admittance controller (outer loop) ───────────────────────
+        Node(
+            package='exoskeleton_control',
+            executable='admittance_controller',
+            name='admittance_controller',
+            output='screen',
+        ),
+
+        # ── Trajectory controller (inner loop) ───────────────────────
+        Node(
+            package='exoskeleton_control',
+            executable='trajectory_controller',
+            name='trajectory_controller',
+            output='screen',
+        ),
+
+        # ── FDI node (new residuals for calibration) ─────────────
+        Node(
+            package='exoskeleton_fdi',
+            executable='fdi_node',
+            name='fdi_node',
+            output='screen',
+            parameters=[fdi_params],
+        ),
+
+        # ── Regime scheduler ─────────────────────────────────────────
+        Node(
+            package='exoskeleton_fdi_characterization',
+            executable='regime_scheduler',
+            name='regime_scheduler',
+            output='screen',
+            parameters=[regimes_yaml],
+        ),
+
+        # ── Bag recorder ─────────────────────────────────────────────
+        bag_record,
+
+    ])

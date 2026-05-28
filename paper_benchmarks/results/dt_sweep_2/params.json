@@ -1,0 +1,23 @@
+{
+  "urdf": "/home/mbari/ros2_ws/src/HES_DT_FDI/paper_benchmarks/urdf/assembly_with_hand.urdf",
+  "dt_list": [
+    0.0001,
+    0.0005,
+    0.001,
+    0.002
+  ],
+  "duration": 10.0,
+  "amplitude": 3.5,
+  "period": 10.0,
+  "warmup": 1.0,
+  "nv": 9,
+  "no_friction": false,
+  "no_coulomb": true,
+  "friction_override": {
+    "fric_coul": 0.0
+  },
+  "theta_min": -0.75,
+  "theta_max": 0.09,
+  "theta_init": 0.0,
+  "profile": "half_sine_neg"
+}
